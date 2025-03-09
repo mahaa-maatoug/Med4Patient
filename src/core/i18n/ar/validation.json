@@ -1,0 +1,9 @@
+{
+  "PASSWORD_REQUIRED": "يجب ألا تكون كلمة المرور فارغة",
+  "CONFIRM_PASSWORD_REQUIRED": "يجب ألا يكون تأكيد كلمة المرور فارغًا",
+  "FIRST_NAME_REQUIRED": "يجب ألا يكون الاسم الأول فارغًا",
+  "LAST_NAME_REQUIRED": "يجب ألا يكون اسم العائلة فارغًا",
+  "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب",
+  "EMAIL_INVALID": "البريد الإلكتروني المدخل غير صالح",
+  "INVALID_REQUEST_PARAMETERS": "معلمات الطلب غير صالحة."
+}

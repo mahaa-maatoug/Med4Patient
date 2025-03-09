@@ -1,0 +1,16 @@
+{
+  "PASSWORD_INVALID": "Le mot de passe est invalide.",
+  "PHONE_NUMBER_ALREADY_USED": "Ce numéro de téléphone est déjà utilisé.",
+  "EMAIL_ALREADY_USED": "Cette adresse email est déjà utilisée.",
+  "PROFILE_ALREADY_USED": "Ce profil est déjà utilisé.",
+  "PHONE_NUMBER_NOT_VERIFIED": "Le numéro de téléphone n'est pas vérifié.",
+  "PHONE_NUMBER_DOES_NOT_EXIST": "Le numéro de téléphone n'existe pas.",
+  "USER_NOT_FOUND": "L'utilisateur n'a pas été trouvé.",
+  "USER_NOT_ACTIVE": "L'utilisateur n'est pas actif.",
+  "INVALID_EMAIL_FORMAT": "Le format de l'email est invalide.",
+  "AUTHENTICATION_FAILED": "Échec de l'authentification.",
+  "ACCOUNT_NOT_VALIDATED": "Le compte n'a pas été validé.",
+  "ROLE_INVALID": "Le rôle est invalide.",
+  "WRONG_CREDENTIALS": "Les identifiants fournis sont incorrects.",
+  "COSTUMER_INVALID": "Le client est invalide."
+}

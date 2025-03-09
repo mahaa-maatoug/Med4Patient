@@ -1,0 +1,16 @@
+{
+  "PASSWORD_INVALID": "كلمة المرور غير صحيحة.",
+  "PHONE_NUMBER_ALREADY_USED": "رقم الهاتف هذا مستخدم بالفعل.",
+  "EMAIL_ALREADY_USED": "عنوان البريد الإلكتروني هذا مستخدم بالفعل.",
+  "PROFILE_ALREADY_USED": "هذا الملف الشخصي مستخدم بالفعل.",
+  "PHONE_NUMBER_NOT_VERIFIED": "رقم الهاتف غير مُحقق.",
+  "PHONE_NUMBER_DOES_NOT_EXIST": "رقم الهاتف غير موجود.",
+  "USER_NOT_FOUND": "لم يتم العثور على المستخدم.",
+  "USER_NOT_ACTIVE": "المستخدم غير نشط.",
+  "INVALID_EMAIL_FORMAT": "تنسيق البريد الإلكتروني غير صحيح.",
+  "AUTHENTICATION_FAILED": "فشل التحقق.",
+  "ACCOUNT_NOT_VALIDATED": "الحساب غير مفعل.",
+  "ROLE_INVALID": "الدور غير صالح.",
+  "WRONG_CREDENTIALS": "بيانات الاعتماد غير صحيحة.",
+  "COSTUMER_INVALID": "العميل غير صالح."
+}

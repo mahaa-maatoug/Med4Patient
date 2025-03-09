@@ -1,0 +1,9 @@
+{
+  "PASSWORD_REQUIRED": "Password should not be empty",
+  "CONFIRM_PASSWORD_REQUIRED": "Confirm password should not be empty",
+  "FIRST_NAME_REQUIRED": "First name should not be empty",
+  "LAST_NAME_REQUIRED": "Last name should not be empty",
+  "EMAIL_REQUIRED": "Email is required",
+  "EMAIL_INVALID": "The provided email is not valid",
+  "INVALID_REQUEST_PARAMETERS": "Invalid request parameter(s)."
+}
