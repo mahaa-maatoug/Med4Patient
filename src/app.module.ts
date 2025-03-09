@@ -9,8 +9,8 @@ import { join } from 'path';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { MailModule } from 'src/app/modules/mail/MailModule';
-import { patientmodule } from './app/modules/Patient/patientmodule';
+import { PatientModule } from './app/modules/patient/patient.module';
+
 
 
 @Module({
@@ -58,9 +58,7 @@ import { patientmodule } from './app/modules/Patient/patientmodule';
 
     // Your custom modules (like UserModule)
     UserModule,
-    patientmodule,
-
-    MailModule,
+    PatientModule,
   ],
   controllers: [AppController],
   providers: [AppService],

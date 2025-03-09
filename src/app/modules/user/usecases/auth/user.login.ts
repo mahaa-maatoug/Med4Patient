@@ -4,7 +4,6 @@ import { UserRepository } from "../../user.repository";
 import { BcryptGateway } from "../../../../gateways/bcrypt.gateway";
 import { UserErrors } from "../../../../../core/errors/UserErrors";
 import { JwtGateway } from "../../../../gateways/jwt.gateway";
-import { PatientRepository } from '../../../Patient/PatientRepository';
 import { UserMail } from '../../../mail/usermail';
 
 
@@ -13,7 +12,6 @@ import { UserMail } from '../../../mail/usermail';
 export class UserLogin {
   constructor(
     private readonly userRepository: UserRepository, // User repository for finding users
-    private readonly patientRepository: PatientRepository, // Patient repository for finding patients
     private readonly bcryptGateway: BcryptGateway, // For comparing passwords
     private readonly jwtGateway: JwtGateway, // JWT service for generating tokens
     private readonly userMail: UserMail,
@@ -22,15 +20,11 @@ export class UserLogin {
 
   // Main logic for handling the login process
   async execute(email: string, resetCode_check: string): Promise<any> {
-    let user: any;
 
     // 1️⃣ Try finding user in UserRepository
-    user = await this.userRepository.findOneByEmail(email);
+    const user = await this.userRepository.findOneByEmail(email);
 
     // 2️⃣ If not found in UserRepository, check in PatientRepository
-    if (!user) {
-      user = await this.patientRepository.findOneByEmail(email); // Check if it's a patient
-    }
 
     // 3️⃣ If user (or patient) not found, throw error
     if (!user) {

@@ -11,7 +11,6 @@ import { BcryptGateway } from "../../gateways/bcrypt.gateway";
 import { JwtGateway } from "../../gateways/jwt.gateway";
 import { AuthenticationMiddleware } from "../../middlewares/authenticationMiddleware";
 import { UserMail } from '../mail/usermail';
-import { PatientRepository } from '../Patient/PatientRepository';
 
 @Module({
   imports: [
@@ -23,10 +22,8 @@ import { PatientRepository } from '../Patient/PatientRepository';
   ],
   controllers: [UserController],
   providers: [
-
     UserRegister,
     UserRepository,
-    PatientRepository,
     BcryptGateway,
     JwtGateway,
     UserMail,
