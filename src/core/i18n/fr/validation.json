@@ -1,0 +1,9 @@
+{
+  "PASSWORD_REQUIRED": "Le mot de passe ne doit pas être vide",
+  "CONFIRM_PASSWORD_REQUIRED": "La confirmation du mot de passe ne doit pas être vide",
+  "FIRST_NAME_REQUIRED": "Le prénom ne doit pas être vide",
+  "LAST_NAME_REQUIRED": "Le nom de famille ne doit pas être vide",
+  "EMAIL_REQUIRED": "L'email est requis",
+  "EMAIL_INVALID": "L'email fourni n'est pas valide",
+  "INVALID_REQUEST_PARAMETERS": "Paramètre(s) de requête invalide(s)."
+}
