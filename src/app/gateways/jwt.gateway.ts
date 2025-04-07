@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtService } from '@nestjs/jwt';
 import { UserIdentity } from "../../core/models/UserIdentity";
+import { ObjectId } from 'mongodb';
 
 
 interface GenerateTokenCommand{
@@ -37,7 +38,7 @@ export class JwtGateway extends PassportStrategy(Strategy) {
       phone: payload.phone,
       email: payload.email,
       id: payload.id,
-      _id: payload.id,
+      _id: new ObjectId(payload.sub),
       role: payload.role,
     } as UserIdentity
   }

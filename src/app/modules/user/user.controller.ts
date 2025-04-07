@@ -28,7 +28,7 @@ import { UserService } from './usecases/auth/user.service';
 
 
 
-import { ObjectId } from 'mongodb';
+
 import { BcryptGateway } from '../../gateways/bcrypt.gateway';
 import { UserRepository } from './user.repository';
 import { UpdateUser } from './commands/user.updateCommand';
@@ -96,55 +96,125 @@ export class UserController {
     }
   }
   @UseGuards(AuthenticationMiddleware)
-  @Put('/profile')
-  async updateProfile(
-    @Body() updateData: UpdateUser, // Use the DTO
+  @Get('/profile')
+  async getProfile(
     @Req() req: AuthenticatedRequest,
     @Res() res: Response,
     @I18n() i18n: I18nContext
   ) {
     try {
-      const userId = req.identity._id.toString();
+      const userId = req.identity._id;
+      const user = await this.userRepository.findOneById(userId);
 
-      // 1. Handle password separately
-      if (updateData.password) {
-        await this.userService.changePassword({
-          userId: new ObjectId(userId),
-          newPassword: updateData.password
-        });
+      if (!user) {
+        return res.status(404).json({ message: i18n.translate('errors.USER_NOT_FOUND') });
       }
 
-      // 2. Prepare safe update object
-      const { password, ...safeUpdate } = updateData as any;
-
-      if (password) {
-        (safeUpdate as any).password = await this.bcryptGateway.encrypt(password);
-      }
-      // 3. Perform the update
-      const updatedUser = await this.userService.updateUser(userId, safeUpdate);
-
-      if (!updatedUser) {
-        throw new UserErrors.UserNotFound();
-      }
-
-      return res.json({
-        success: true,
+      return res.status(200).json({
         user: {
-          firstName: updatedUser.firstName,
-          lastName: updatedUser.lastName,
-          password:updatedUser.password,
-          // Don't return sensitive data
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role
         }
       });
-
-    } catch (e) {
-      console.error('Update failed:', e); // Add logging
-      return res.status(500).json({
-        message: i18n.translate('errors.PROFILE_UPDATE_FAILED')
-      });
+    } catch  {
+      return res.status(500).json({ message: i18n.translate('errors.SERVER_ERROR') });
     }
   }
 
+  @UseGuards(AuthenticationMiddleware)
+  @Put('/profile')
+  async updateProfile(
+    @Req() req: AuthenticatedRequest,
+    @Res() res: Response,
+    @Body() body: UpdateUser,
+    @I18n() i18n: I18nContext
+  ) {
+    try {
+      const userId = req.identity._id;
+
+      // If password is being updated, encrypt it
+      if (body.password) {
+        body.password = await this.bcryptGateway.encrypt(body.password);
+      }
+
+      const updatedUser = await this.userRepository.updateUser(userId.toString(), body);
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: i18n.translate('errors.USER_NOT_FOUND') });
+      }
+
+      return res.status(200).json({
+        user: {
+          id: updatedUser._id,
+          firstName: updatedUser.firstName,
+          lastName: updatedUser.lastName,
+          email: updatedUser.email
+        },
+        message: i18n.translate('success.PROFILE_UPDATED')
+      });
+    } catch (e) {
+      if (e instanceof UserErrors.EmailAlreadyUsed) {
+        return res.status(400).json({ message: i18n.translate('errors.EMAIL_ALREADY_USED') });
+      }
+      return res.status(500).json({ message: i18n.translate('errors.SERVER_ERROR') });
+    }
+  }
+
+  @UseGuards(AuthenticationMiddleware)
+  @Put('/change-password')
+  async changePassword(
+    @Req() req: AuthenticatedRequest,
+    @Res() res: Response,
+    @Body() body: { currentPassword: string; newPassword: string },
+    @I18n() i18n: I18nContext
+  ) {
+    try {
+      console.log('Change password request received'); // Debug log
+      console.log('User identity:', req.identity); // Debug log
+
+      // Ensure identity exists
+      if (!req.identity) {
+        console.log('No identity in request');
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Convert string ID to ObjectId if needed
+      const userId = req.identity._id;
+      console.log('User ID:', userId); // Debug log
+
+      await this.userRepository.changePassword(
+        userId,
+        body.currentPassword,
+        body.newPassword
+      );
+
+      return res.status(200).json({
+        message: i18n.t('success.PASSWORD_CHANGED')
+      });
+    } catch (e) {
+      console.error('Error changing password:', e); // Debug log
+
+      if (e instanceof UserErrors.WrongCredentials) {
+        return res.status(401).json({ message: i18n.t('errors.WRONG_CURRENT_PASSWORD') });
+      }
+      if (e instanceof UserErrors.UserNotFound) {
+        return res.status(404).json({ message: i18n.t('errors.USER_NOT_FOUND') });
+      }
+
+      // More specific error handling
+      if (e instanceof Error && e.message.includes('ObjectId')) {
+        return res.status(400).json({ message: 'Invalid user ID format' });
+      }
+
+      return res.status(500).json({
+        message: i18n.t('errors.SERVER_ERROR'),
+        error: process.env.NODE_ENV === 'development' ? e.message : undefined
+      });
+    }
+  }
 // Route to get the currently authenticated user's information (protected by authentication guard)
   @Get('me')
   @UseGuards(AuthenticationMiddleware) // Protect with the AuthenticationMiddleware guard

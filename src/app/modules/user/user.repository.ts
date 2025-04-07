@@ -36,6 +36,14 @@ export class UserRepository {
   }
   async updateUser(userId: string, updateData: Partial<User>): Promise<User | null> {
     try {
+      // Check if email is being updated and if it's already in use
+      if (updateData.email) {
+        const existingUser = await this.userModel.findOne({ email: updateData.email });
+        if (existingUser && existingUser._id.toString() !== userId) {
+          throw new UserErrors.EmailAlreadyUsed();
+        }
+      }
+
       const objectId = new ObjectId(userId);
       return this.userModel.findByIdAndUpdate(
         objectId,

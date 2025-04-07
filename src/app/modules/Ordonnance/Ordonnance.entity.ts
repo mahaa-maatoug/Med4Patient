@@ -1,16 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { PrescriptionStatus } from '../../../core/enums/PrescriptionStatus';
+import { ObjectId } from 'mongodb';
 
 export type OrdonnanceDocument = Ordonnance & Document;
 
 @Schema({ timestamps: true })
 export class Ordonnance {
-  @Prop({  unique: true })    id: string;
-  @Prop({ required: true })
+  @Prop({ required: true, default: () => new ObjectId().toString() })
+  id: string;
+  @Prop({
+    type: String,
+    required: true,
+    unique: true,
+    default: () => new ObjectId().toString()
+  })
+  idordonnace: string;
+
+  @Prop()
   patientId: string;
 
-  @Prop({ required: true })
+  @Prop()
   pharmacyId: string;
   @Prop({ type: [String], required: true }) // Stocker les URLs des fichiers
   storagePath: string[];

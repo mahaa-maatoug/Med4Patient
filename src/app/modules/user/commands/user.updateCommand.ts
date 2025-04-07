@@ -1,20 +1,21 @@
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 
 export class UpdateUser {
-  @IsOptional()
   @IsString()
+  @IsOptional()
   firstName?: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   lastName?: string;
 
-
-
+  @IsEmail()
   @IsOptional()
+  email?: string;
+
   @IsString()
-  @MinLength(6)
+  @IsOptional()
   password?: string;
 
 }
