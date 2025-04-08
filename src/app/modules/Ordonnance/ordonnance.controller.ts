@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseInterceptors, UploadedFiles, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseInterceptors,
+  UploadedFiles,
+  Res,
+  BadRequestException, Query,
+} from '@nestjs/common';
 import {  FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { OrdonnanceService } from './ordonnance.service';
@@ -44,7 +56,7 @@ export class OrdonnanceController {
     return this.ordonnanceService.update(id, updateOrdonnanceDto);
   }
 
-  @Delete('/delete:id')
+  @Delete('/delete/:id')
   async delete(@Param('id') id: string) {
     await this.ordonnanceService.delete(id);
     return { message: 'Ordonnance supprimée avec succès' };
@@ -82,5 +94,23 @@ export class OrdonnanceController {
     } catch  {
       res.status(404).send('File not found');
     }
+  }
+  @Get('/history')
+  async getHistory(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string
+  ) {
+    // Validate and parse dates
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      throw new BadRequestException('Invalid date format');
+    }
+
+    // Add one day to end date to include the entire end day
+    end.setDate(end.getDate() + 1);
+
+    return this.ordonnanceService.findByDateRange(start, end);
   }
 }

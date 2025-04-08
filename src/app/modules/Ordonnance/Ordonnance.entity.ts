@@ -55,6 +55,8 @@ export class Ordonnance {
 
   @Prop({ type: Date })
   expiresAt?: Date;
+  @Prop()createdAt?: Date;
+  @Prop()updatedAt?: Date;
 }
 
 export const OrdonnanceSchema = SchemaFactory.createForClass(Ordonnance);

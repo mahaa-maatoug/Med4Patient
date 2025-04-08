@@ -28,4 +28,12 @@ export class OrdonnanceRepository {
   async delete(id: string): Promise<void> {
     await this.ordonnanceModel.findByIdAndDelete(id).exec();
   }
+  async findByDateRange(startDate: Date, endDate: Date): Promise<Ordonnance[]> {
+    return this.ordonnanceModel.find({
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate
+      }
+    }).sort({ createdAt: -1 }).exec();
+  }
 }

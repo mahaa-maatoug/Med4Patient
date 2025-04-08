@@ -30,4 +30,7 @@ export class OrdonnanceService {
   async delete(id: string) {
     return this.ordonnanceRepository.delete(id);
   }
+  async findByDateRange(startDate: Date, endDate: Date) {
+    return this.ordonnanceRepository.findByDateRange(startDate, endDate);
+  }
 }
