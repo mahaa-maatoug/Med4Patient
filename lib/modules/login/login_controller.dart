@@ -11,7 +11,7 @@ class LoginController extends GetxController {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isLoading = false.obs;
-  final UserController userController = Get.put(UserController());
+  final UserController userController = Get.find<UserController>();
 
   Future<void> login() async {
     isLoading.value = true;
@@ -31,26 +31,28 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final token = data['token'];
-        final user = data['user']; // Vérifie que 'user' est bien dans la réponse
+        final user = data['user'];
 
-        // Stocker les infos utilisateur
+        // Store user info
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
-        await prefs.setString('userId', user['_id']); // ID du patient
+        // Make sure to use the same field name as your backend (_id)
+        await prefs.setString('userId', user['_id']);
         await prefs.setString('email', user['email']);
         await prefs.setString('firstName', user['firstName']);
 
-        // Charger les infos utilisateur
+        // Force reload user data
         await userController.loadUserFromStorage();
 
-        Get.offNamed('/home'); // Redirection vers l'accueil
+        Get.offAllNamed('/home'); // Use offAll to clear navigation stack
       } else {
-        final errorMessage = jsonDecode(response.body)['message'] ?? 'Échec de la connexion';
-        Get.snackbar("Erreur", errorMessage, snackPosition: SnackPosition.BOTTOM);
+        final error = jsonDecode(response.body);
+        Get.snackbar("Erreur", error['message'] ?? 'Échec de la connexion');
       }
     } catch (e) {
       isLoading.value = false;
-      Get.snackbar("Erreur", e.toString(), snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Erreur", "Une erreur s'est produite. Veuillez réessayer.");
+      print('Login error: $e');
     }
   }
 }

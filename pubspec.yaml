@@ -44,6 +44,7 @@ dependencies:
   path: ^1.8.2
   camera: ^0.10.0+1
   image_picker: ^0.8.7+3
+  flutter_pdfview: ^1.0.0+4
 dev_dependencies:
   flutter_test:
     sdk: flutter

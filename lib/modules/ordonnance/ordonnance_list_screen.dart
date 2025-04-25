@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'Ordonnance.dart';
 import 'OrdonnanceController.dart';
+import 'PDFViewerScreen.dart';
 import 'add_ordonnance_screen.dart';
 
 import 'package:intl/intl.dart';
@@ -105,6 +106,8 @@ class OrdonnanceListScreen extends StatelessWidget {
     );
   }
 
+
+
   Widget _buildOrdonnanceCard(Ordonnance ordonnance) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -121,44 +124,70 @@ class OrdonnanceListScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: ordonnance.storagePath.length,
                 itemBuilder: (context, imgIndex) {
-                  return Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        'http://10.0.2.2:3000${ordonnance.storagePath[imgIndex]}',
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                  final filePath = ordonnance.storagePath[imgIndex];
+                  if (filePath.endsWith('.pdf')) {
+                    // Afficher le fichier PDF
+                    return Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: GestureDetector(
+                          onTap: () {
+                            // Lorsque l'utilisateur clique sur un PDF, ouvrez-le dans un écran complet
+                            Get.to(() => PDFViewerScreen(pdfPath: filePath));
+                          },
+                          child: Container(
                             width: 150,
                             height: 150,
                             color: Colors.grey[200],
                             child: Center(
-                              child: Icon(Icons.broken_image, size: 50, color: Colors.grey[500]),
+                              child: Icon(Icons.picture_as_pdf, size: 50, color: Colors.red),
                             ),
-                          );
-                        },
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            width: 150,
-                            height: 150,
-                            color: Colors.white,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    // Afficher l'image
+                    return Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          'http://10.0.2.2:3000$filePath',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 150,
+                              height: 150,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Icon(Icons.broken_image, size: 50, color: Colors.grey[500]),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              width: 150,
+                              height: 150,
+                              color: Colors.white,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
@@ -198,6 +227,7 @@ class OrdonnanceListScreen extends StatelessWidget {
       ),
     );
   }
+
   void _showPrescriptionDetails(Ordonnance ordonnance) {
     Get.defaultDialog(
       title: 'Prescription Details',

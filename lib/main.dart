@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/routes/app_pages.dart';
+import 'modules/login/login_controller.dart';
+import 'modules/login/usercontroller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +13,8 @@ void main() async {
   // Vérifier si l'utilisateur est connecté en récupérant le token
   final prefs = await SharedPreferences.getInstance();
   final String? token = prefs.getString('token');
-
+  Get.put(UserController());
+  Get.put(LoginController());
   runApp(MyApp(isLoggedIn: token != null));
 }
 

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:med4front/modules/Product/ProductListView.dart';
 import 'package:med4front/modules/login/login_screen.dart';
 import 'package:med4front/modules/login/login_binding.dart';
 
@@ -7,6 +8,9 @@ import '../../modules/Home/colis_binding.dart';
 import '../../modules/Home/home_screen.dart';
 import '../../modules/Home/home_binding.dart';
 
+import '../../modules/Product/cart_screen.dart';
+import '../../modules/Product/order_history_screen.dart';
+import '../../modules/login/resetpasswordview.dart';
 import '../../modules/ordonnance/ordonnance_list_screen.dart';
 import '../../modules/ordonnance/ordonnancebinding.dart';
 class AppPages {
@@ -22,6 +26,14 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage(
+      name: '/cart',
+      page: () => CartScreen(),
+    ),
+    GetPage(
+      name: '/orders',
+      page: () => OrderHistoryScreen(),
+    ),
+    GetPage(
       name: '/colis',
       page: () => ColisScreen(),
       binding: ColisBinding(),
@@ -31,5 +43,16 @@ class AppPages {
       page: () => OrdonnanceListScreen(),
         binding: OrdonnanceBinding()
     ),
+    GetPage(
+        name: '/product',
+        page: () => ProductListView(),
+
+    ),
+  GetPage(
+  name: '/reset-password',
+  page: () => ResetPasswordView(),
+
+  ),
+
   ];
 }

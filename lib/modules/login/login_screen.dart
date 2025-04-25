@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
 
+
+
 class LoginScreen extends StatelessWidget {
   final LoginController controller = Get.put(LoginController());
 
@@ -38,6 +40,30 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
+              // Forgot Password TextButton
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // Navigate to ResetPasswordView and pass the email if available
+                    Get.toNamed(
+                      '/reset-password',
+                      arguments: controller.emailController.text.isNotEmpty
+                          ? controller.emailController.text
+                          : null,
+                    );
+                  },
+                  child: Text(
+                    'Mot de passe oublié ?',
+                    style: TextStyle(
+                      color: Colors.blue[800],
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
               Obx(() => controller.isLoading.value
                   ? CircularProgressIndicator()
                   : SizedBox(
@@ -46,13 +72,20 @@ class LoginScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: controller.login,
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                     backgroundColor: Colors.blue[700],
                   ),
-                  child: Text('Connexion',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(
+                    'Connexion',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
-              )),
+              ),
+              ),
             ],
           ),
         ),
