@@ -20,9 +20,10 @@ import { extname } from 'path';
 import { Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
+import { OcrService } from './ocr.service';
 @Controller('prescription')
 export class OrdonnanceController {
-  constructor(private readonly ordonnanceService: OrdonnanceService) {}
+  constructor(private readonly ordonnanceService: OrdonnanceService , private readonly ocrService: OcrService) {}
 
   @Post('/add')
   @UseInterceptors(
@@ -112,5 +113,78 @@ export class OrdonnanceController {
     end.setDate(end.getDate() + 1);
 
     return this.ordonnanceService.findByDateRange(start, end);
+  }
+  @Post('/process-prescription')
+  @UseInterceptors(
+    FilesInterceptor('storagePath', 5, {
+      storage: diskStorage({
+        destination: './uploads/ordonnances',
+        filename: (req, file, callback) => {
+          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+          callback(null, uniqueFilename);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        // Validate file types
+        const allowedTypes = [
+          'image/jpeg',
+          'image/png',
+          'application/pdf',
+          'image/tiff'
+        ];
+        if (allowedTypes.includes(file.mimetype)) {
+          callback(null, true);
+        } else {
+          callback(
+            new BadRequestException(
+              'Only JPEG, PNG, PDF, and TIFF files are allowed'
+            ),
+            false
+          );
+        }
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+      },
+    })
+  )
+  async processPrescription(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() createOrdonnanceDto: CreateOrdonnanceDto
+  ) {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('At least one file is required');
+    }
+
+    try {
+      // Process each file with OCR
+      const ocrResults = await Promise.all(
+        files.map(file => this.ocrService.recognizeMedicationNames(file.path))
+      );
+
+      const recognizedMeds = ocrResults.flat();
+      const fileUrls = files.map(file => `/uploads/ordonnances/${file.filename}`);
+
+      // Create prescription with recognized medications
+      return await this.ordonnanceService.create(
+        {
+          ...createOrdonnanceDto,
+          medications: recognizedMeds // Include recognized medications
+        },
+        fileUrls
+      );
+    } catch (error) {
+      // Clean up uploaded files if processing fails
+      files.forEach(file => {
+        try {
+          fs.unlinkSync(file.path);
+        } catch (err) {
+          console.error('Failed to clean up file:', file.path, err);
+        }
+      });
+      throw new BadRequestException(
+        `Failed to process prescription: ${error.message}`
+      );
+    }
   }
 }

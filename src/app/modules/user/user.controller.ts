@@ -231,22 +231,9 @@ export class UserController {
       return res.status(403).json({ message: i18n.translate('errors.AUTHENTICATION_FAILED') });
     }
   }
-  @Post('/forgot-password')
-  async forgotPassword(@Body('email') email: string) {
-    const token = await this.userService.requestPasswordReset(email);
 
 
-    return { message: 'Reset link sent to your email', token };
-  }
 
-  @Put('/reset-password')
-  async resetPassword(
-    @Body('token') token: string,
-    @Body('newPassword') newPassword: string,
-  ) {
-    await this.userService.resetPassword(token, newPassword);
-    return { message: 'Password reset successfully' };
-  }
 
 
 // In UserController

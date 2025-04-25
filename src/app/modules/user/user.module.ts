@@ -13,6 +13,8 @@ import { AuthenticationMiddleware } from "../../middlewares/authenticationMiddle
 import { UserMail } from '../mail/usermail';
 import { PatientModule } from '../patient/patient.module';
 import { UserService } from './usecases/auth/user.service';
+import { ResetPasswordController } from './reset-password.controller';
+import { ResetPasswordService } from './reset-password.service';
 
 
 @Module({
@@ -24,7 +26,7 @@ import { UserService } from './usecases/auth/user.service';
       signOptions: { expiresIn: "1y" }
     })
   ],
-  controllers: [UserController],
+  controllers: [UserController,ResetPasswordController],
   providers: [
     UserRegister,
     UserRepository,
@@ -33,7 +35,8 @@ import { UserService } from './usecases/auth/user.service';
     UserMail,
     UserLogin,
     AuthenticationMiddleware,
-    UserService
+    UserService,
+    ResetPasswordService
   ],
   exports: [JwtGateway],
 })

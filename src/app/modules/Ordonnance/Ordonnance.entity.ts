@@ -57,6 +57,8 @@ export class Ordonnance {
   expiresAt?: Date;
   @Prop()createdAt?: Date;
   @Prop()updatedAt?: Date;
+  @Prop({ type: [String], default: [] })
+  medications: string[];
 }
 
 export const OrdonnanceSchema = SchemaFactory.createForClass(Ordonnance);

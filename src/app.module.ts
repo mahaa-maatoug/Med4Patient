@@ -12,6 +12,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { PatientModule } from './app/modules/patient/patient.module';
 import { PackageModule } from './app/modules/package/package.module';
 import { OrdonnanceModule } from './app/modules/Ordonnance/ordonnance.module';
+import { ProductModule } from './app/modules/product/product.module';
+import { OrderModule } from './app/modules/order/order.module';
 
 
 
@@ -63,6 +65,8 @@ import { OrdonnanceModule } from './app/modules/Ordonnance/ordonnance.module';
     PatientModule,
     PackageModule,
     OrdonnanceModule,
+    ProductModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

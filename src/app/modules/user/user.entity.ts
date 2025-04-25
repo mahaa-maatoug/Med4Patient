@@ -23,7 +23,7 @@ export class User extends Document {
   @Prop({ type: String, enum: Role, default: Role.USER })
   role: Role;
   @Prop()
-  resetPasswordToken?: string;
+  resetPasswordCode?: string;
 
   @Prop()
   resetPasswordExpires?: Date;

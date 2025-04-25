@@ -1,4 +1,4 @@
-import { IsString,  IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsArray } from 'class-validator';
 import { PrescriptionStatus } from '../../../core/enums/PrescriptionStatus';
 
 export class CreateOrdonnanceDto {
@@ -16,7 +16,10 @@ export class CreateOrdonnanceDto {
   @IsEnum(PrescriptionStatus)
   prescriptionStatus?: PrescriptionStatus = PrescriptionStatus.UPLOADED;
 
-
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  medications?: string[];
 
 }
 
